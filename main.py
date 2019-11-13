@@ -15,6 +15,7 @@ huckle_raw = huckle_raw.lower()
 
 #Setting up letters to integers
 char_map = sorted(list(set(huckle_raw)))
+int_to_char = dict((i, c) for i, c in enumerate(char_map))
 char_to_int = dict((c, i) for i, c in enumerate(char_map))
 
 n_vocab = len(char_map)
@@ -25,7 +26,7 @@ Ydata= []
 for i in range(0, len(huckle_raw)-breaksection, 1):
     seq_in = huckle_raw[i:i + breaksection]
     seq_out = huckle_raw[i+breaksection]
-    Xdata.append([ord(letter) for letter in seq_in])
+    Xdata.append([char_to_int[char] for char in seq_in])
     Ydata.append(char_to_int[seq_out])
   
 #Reshaping and normalizing
@@ -39,10 +40,37 @@ model.add(keras.layers.Dropout(0.2))
 model.add(keras.layers.Dense(Y.shape[1], activation='softmax'))
 model.compile(loss='categorical_crossentropy', optimizer='adam')
 
-#Saving checkpoint Models
-filepath="Huckleberry-Model-{epoch:02d}-{loss:.4f}.hdf5"
-checkpoint = ModelCheckpoint(filepath, monitor='loss', verbose=1, save_best_only=True, mode='min')
-callbacks_list = [checkpoint]
 
-#Fitting the model/#Tests
-model.fit(X, Y, epochs=20, batch_size=128, callbacks=callbacks_list)
+
+##Saving checkpoint Models
+#filepath="Huckleberry-Model-{epoch:02d}-{loss:.4f}.hdf5"
+#checkpoint = ModelCheckpoint(filepath, monitor='loss', verbose=1, save_best_only=True, mode='min')
+#callbacks_list = [checkpoint]
+
+##Fitting the model/#Tests
+#model.fit(X, Y, epochs=20, batch_size=128, callbacks=callbacks_list)
+
+
+#Testing the Model
+filename = "Huckleberry-Model-20-1.9638.hdf5"
+model.load_weights(filename)
+model.compile(loss='categorical_crossentropy', optimizer='adam')
+# pick a random seed
+start = numpy.random.randint(0, len(X)-1)
+pattern = X[start]
+print ("Seed:")
+print(pattern)
+print(len(pattern))
+print ("\"", ''.join([int_to_char[value] for value in pattern]), "\"")
+# generate characters
+for i in range(1000):
+	x = numpy.reshape(pattern, (1, len(pattern), 1))
+	x = x / float(n_vocab)
+	prediction = model.predict(x, verbose=0)
+	index = numpy.argmax(prediction)
+	result = int_to_char[index]
+	seq_in = [int_to_char[value] for value in pattern]
+	sys.stdout.write(result)
+	pattern.append(index)
+	pattern = pattern[1:len(pattern)]
+print ("\nDone.")
