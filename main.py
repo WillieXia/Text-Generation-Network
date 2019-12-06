@@ -7,7 +7,7 @@ from keras.layers import Dropout
 from keras.utils import np_utils
 
 #Setting up the text
-huckleberry = "huckleberry.txt"
+huckleberry = "Dark_Knight_Script.txt"
 huckle_raw = open(huckleberry, 'r', encoding='utf-8').read()
 huckle_raw = huckle_raw.lower()
 
@@ -38,17 +38,24 @@ model.add(keras.layers.LSTM(256, input_shape=(Xp.shape[1], Xp.shape[2])))
 model.add(keras.layers.Dropout(0.2))
 model.add(keras.layers.Dense(Yp.shape[1], activation='softmax'))
 
-filename = "huckleberry-model-05-1.9205.hdf5"
+model.compile(loss='categorical_crossentropy', optimizer='adam')
+
+#filepath="batman-model-{epoch:02d}-{loss:.4f}.hdf5"
+#checkpoint = keras.callbacks.ModelCheckpoint(filepath, monitor='loss', verbose=1, save_best_only=True, mode='min')
+#callbacks_list = [checkpoint]
+#model.fit(Xp, Yp, epochs=20, batch_size=128, callbacks=callbacks_list)
+
+filename = "batman-model-20-2.0439.hdf5"
 model.load_weights(filename)
 
-model.compile(loss='categorical_crossentropy', optimizer='adam')
+
 
 ###saving checkpoint models
 #filepath="huckleberry-model-{epoch:02d}-{loss:.4f}.hdf5"
 #checkpoint = keras.callbacks.ModelCheckpoint(filepath, monitor='loss', verbose=1, save_best_only=True, mode='min')
 #callbacks_list = [checkpoint]
 
-###fitting the model/#tests
+##fitting the model/#tests
 #model.fit(Xp, Yp, epochs=20, batch_size=128, callbacks=callbacks_list)
 
 # pick a random seed
