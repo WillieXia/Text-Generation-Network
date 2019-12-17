@@ -1,6 +1,6 @@
 # Text-Generation-Network
 
-This was a personal introductory mini project for Deep LearningI did 
+This was a personal introductory mini project for Deep Learning I did 
 for Rensselaer Center for Open Source, where I coded a Long Short Term Memory 
 to intake the texts from one of my favorite books, Huckleberry Finn. Since Huckleberry Finn
 has a decently large size of characters, I had enough sample to develop
